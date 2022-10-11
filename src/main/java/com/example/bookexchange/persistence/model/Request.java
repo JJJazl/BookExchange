@@ -1,6 +1,5 @@
 package com.example.bookexchange.persistence.model;
 
-import jdk.jfr.Timestamp;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -10,10 +9,7 @@ import java.util.Set;
 
 @Entity
 @Data
-public class Request {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class Request extends BaseEntity<Long> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_from")
@@ -25,19 +21,19 @@ public class Request {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "request_sended_book",
+            name = "request_book",
             joinColumns = @JoinColumn(name = "request_id"),
-            inverseJoinColumns = @JoinColumn(name = "book_id")
+            inverseJoinColumns = @JoinColumn(name = "sender_book_id")
     )
-    private Set<Book> sendingBookId;
+    private Set<Book> senderBookId;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "request_received_book",
+            name = "request_book",
             joinColumns = @JoinColumn(name = "request_id"),
-            inverseJoinColumns = @JoinColumn(name = "book_id")
+            inverseJoinColumns = @JoinColumn(name = "recipient_book_id")
     )
-    private Set<Book> receivingBookId;
+    private Set<Book> recipientBookId;
 
     @Enumerated(value = EnumType.STRING)
     private Status status;

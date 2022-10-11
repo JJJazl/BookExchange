@@ -13,18 +13,16 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = "user_account")
 @Data
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class User extends BaseEntity<Long> {
 
     @NotBlank
     private String username;
     @NotBlank
     @Pattern(regexp = ".+@.+\\..+")
     private String email;
+
     @NotBlank
     @Size(min = 3)
     private String password;

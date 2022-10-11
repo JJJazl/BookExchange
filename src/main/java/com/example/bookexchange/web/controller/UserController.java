@@ -4,30 +4,34 @@ import com.example.bookexchange.persistence.dto.UserDto;
 import com.example.bookexchange.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/api/v1")
-public class UserController {
+import java.util.Optional;
 
+@RestController
+@RequestMapping("/api/v1/users")
+public class UserController {
     private final UserService userService;
-    private final PasswordEncoder encoder;
 
     @Autowired
-    public UserController(UserService userService, PasswordEncoder encoder) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.encoder = encoder;
     }
 
     @PostMapping("/register")
     public UserDto register(@RequestBody UserDto userDto) {
-        return userService.register(userDto);
+        return userService.addUser(userDto);
     }
 
+
     @DeleteMapping("/{id}")
-    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('USER')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUserById(@PathVariable long id) {
-        userService.deleteById(id);
+        ResponseEntity<Object> response = userService.deleteById(id)
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.notFound().build();
     }
 }

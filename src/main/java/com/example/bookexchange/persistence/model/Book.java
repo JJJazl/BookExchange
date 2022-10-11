@@ -1,26 +1,22 @@
 package com.example.bookexchange.persistence.model;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Set;
 
 @Entity
 @Data
-public class Book {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class Book extends BaseEntity<Long> {
 
     @NotBlank
     private String title;
     @NotBlank
-    @Min(10)
-    private long ISBN;
+    @Length(min = 10)
+    private String ISBN;
     @NotBlank
     private String author;
 
@@ -36,9 +32,9 @@ public class Book {
     @JoinColumn(name = "user_id")
     private User userId;
 
-    @ManyToMany(mappedBy = "sendingBookId", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @ManyToMany(mappedBy = "senderBookId", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private List<Request> receivedRequests;
 
-    @ManyToMany(mappedBy = "receivingBookId", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @ManyToMany(mappedBy = "recipientBookId", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private List<Request> sentRequests;
 }

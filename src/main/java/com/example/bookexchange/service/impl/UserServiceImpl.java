@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto register(UserDto userDto) {
+    public UserDto addUser(UserDto userDto) {
         if (userRepo.existsByEmail(userDto.getEmail())) {
             throw new UserAlreadyExists("User with this email already exists!");
         }
@@ -53,7 +53,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteById(long id) {
-        userRepo.deleteById(id);
+    public boolean deleteById(long id) {
+        return userRepo.findById(id)
+                .map(user -> {
+                    userRepo.delete(user);
+                    return true;
+                }).orElse(false);
     }
 }

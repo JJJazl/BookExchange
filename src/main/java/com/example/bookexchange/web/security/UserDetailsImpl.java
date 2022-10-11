@@ -9,9 +9,9 @@ import java.util.Collection;
 import java.util.List;
 
 public class UserDetailsImpl implements UserDetails {
-    private String email;
-    private String password;
-    private List<GrantedAuthority> rolesAndAuthorities;
+    private final String email;
+    private final String password;
+    private final List<GrantedAuthority> rolesAndAuthorities;
 
     public UserDetailsImpl(User user) {
         this.email = user.getEmail();

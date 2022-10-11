@@ -10,10 +10,10 @@ import java.util.Set;
 @AllArgsConstructor
 public class BookDto {
     private String title;
-    private long ISBN;
+    private String ISBN;
     private String author;
     private Set<Genre> genre;
     private String description;
     private String publisher;
-    private UserDto owner;
+    private UserDto userId;
 }
