@@ -12,9 +12,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.io.IOException;
-import java.net.http.HttpRequest;
 import java.util.Base64;
 import java.util.Date;
 
@@ -54,10 +51,10 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public boolean validateToken(String token) throws JwtAuthenticationException {
+    public boolean validateToken(String token) {
         try {
             Jws<Claims> claimsJws = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-            return true;
+            return !claimsJws.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
             throw new JwtAuthenticationException("Jwt token is expired or invalid", HttpStatus.UNAUTHORIZED);
         }
@@ -65,6 +62,8 @@ public class JwtTokenProvider {
 
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(getEmail(token));
+
+        /* возможно использовать userDetails.getPassword() - вместо "" */
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 

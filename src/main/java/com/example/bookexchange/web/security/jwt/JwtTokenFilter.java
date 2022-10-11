@@ -25,7 +25,7 @@ public class JwtTokenFilter extends GenericFilterBean {
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
 
         try {
@@ -37,10 +37,9 @@ public class JwtTokenFilter extends GenericFilterBean {
             }
         } catch (JwtAuthenticationException e) {
             SecurityContextHolder.clearContext();
-            ((HttpServletResponse) request).sendError(e.getHttpStatus().value());
-            throw new JwtAuthenticationException("JWT token is expired or invalid");
+            ((HttpServletResponse) response).sendError(e.getHttpStatus().value());
+            throw new JwtAuthenticationException("Class JwtTokenProvider JWT token is expired or invalid");
         }
-        //нет метода filterChain.doFilter()
-
+        filterChain.doFilter(request, response);
     }
 }

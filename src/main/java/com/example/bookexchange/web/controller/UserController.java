@@ -28,10 +28,10 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUserById(@PathVariable long id) {
+    public ResponseEntity<?> deleteUserById(@PathVariable long id) {
         ResponseEntity<Object> response = userService.deleteById(id)
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.notFound().build();
+        return response;
     }
 }
