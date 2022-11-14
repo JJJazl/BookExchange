@@ -14,6 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto {
+    private Long id; //добавил
     private String username;
     private String email;
     private String password;

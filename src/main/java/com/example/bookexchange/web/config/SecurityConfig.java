@@ -34,7 +34,6 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                //.mvcMatchers("/api/v1/str").hasRole(Role.USER.name())
                 .mvcMatchers("/api/v1/users/register").permitAll()
                 .mvcMatchers("/api/v1/auth/login").permitAll()
                 .anyRequest()

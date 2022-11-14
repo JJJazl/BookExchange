@@ -33,7 +33,7 @@ public class User extends BaseEntity<Long> {
     @CreationTimestamp
     private LocalDateTime dateCreation;
 
-    @OneToMany(mappedBy = "userId", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     @ToString.Exclude
     private Set<Book> books;
 

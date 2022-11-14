@@ -7,9 +7,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class UserExceptionHandler {
-
     @ExceptionHandler({UserAlreadyExists.class})
     public ResponseEntity<Object> handleUserAlreadyExistsException(UserAlreadyExists e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({BookAlreadyExists.class})
+    public ResponseEntity<Object> handleBookAlreadyExistsException(BookAlreadyExists e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

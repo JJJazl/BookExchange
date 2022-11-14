@@ -22,7 +22,6 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder encoder;
 
-
     public UserServiceImpl(@Autowired UserRepository userRepo,
                            @Autowired PasswordEncoder encoder,
                            UserMapper userMapper) {

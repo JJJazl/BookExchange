@@ -11,7 +11,6 @@ import java.util.Set;
 @Entity
 @Data
 public class Book extends BaseEntity<Long> {
-
     @NotBlank
     private String title;
     @NotBlank
@@ -19,7 +18,6 @@ public class Book extends BaseEntity<Long> {
     private String ISBN;
     @NotBlank
     private String author;
-
     @Enumerated(EnumType.STRING)
     @ElementCollection
     @CollectionTable(name = "book_genre", joinColumns = @JoinColumn(name = "book_id"))
@@ -30,7 +28,10 @@ public class Book extends BaseEntity<Long> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User userId;
+    private User user;
+
+    @OneToOne(mappedBy = "book")
+    private BookImage bookImage;
 
     @ManyToMany(mappedBy = "senderBookId", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private List<Request> receivedRequests;

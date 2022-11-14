@@ -48,15 +48,19 @@ public class AuthenticationRestController {
                     () -> new UsernameNotFoundException("Not found " + requestDto.getEmail()));
             String token = jwtTokenProvider.createToken(requestDto.getEmail(), user.getRole().name());
             Map<Object, Object> response = new HashMap<>();
-            response.put("email", requestDto.getEmail());
+            response.put("username", user.getUsername());
+            response.put("id", user.getId());
+            response.put("email", user.getEmail());
+            response.put("role", user.getRole());
             response.put("token", token);
-            return ResponseEntity.ok(response);
+            response.put("date", user.getDateCreation());
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (AuthenticationException e) {
             return new ResponseEntity<>("Invaid email/password combination", HttpStatus.FORBIDDEN);
         }
     }
 
-    @PostMapping("/logotu")
+    @PostMapping("/logout")
     public void logout(HttpServletRequest request, HttpServletResponse response) {
         SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
         securityContextLogoutHandler.logout(request, response, null);
