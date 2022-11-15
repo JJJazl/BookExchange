@@ -3,8 +3,10 @@ package com.example.bookexchange.service.impl;
 import com.example.bookexchange.exception.BookAlreadyExists;
 import com.example.bookexchange.mapper.BookCreateMapper;
 import com.example.bookexchange.mapper.BookDetailsInfoMapper;
+import com.example.bookexchange.mapper.BookMainInfoMapper;
 import com.example.bookexchange.persistence.dto.BookCreateDto;
 import com.example.bookexchange.persistence.dto.BookDetailsInfoDto;
+import com.example.bookexchange.persistence.dto.BookMainInfoDto;
 import com.example.bookexchange.persistence.model.Book;
 import com.example.bookexchange.persistence.model.BookImage;
 import com.example.bookexchange.persistence.model.User;
@@ -15,11 +17,11 @@ import com.example.bookexchange.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -29,18 +31,21 @@ public class BookServiceImpl implements BookService {
     private final UserRepository userRepository;
     private final BookCreateMapper bookCreateMapper;
     private final BookDetailsInfoMapper bookDetailsInfoMapper;
+    private final BookMainInfoMapper bookMainInfoMapper;
 
     @Autowired
     public BookServiceImpl(BookRepository bookRepository,
                            BookImageService bookImageService,
                            UserRepository userRepository,
                            BookCreateMapper bookCreateMapper,
-                           BookDetailsInfoMapper bookDetailsInfoMapper) {
+                           BookDetailsInfoMapper bookDetailsInfoMapper,
+                           BookMainInfoMapper bookMainInfoMapper) {
         this.bookRepository = bookRepository;
         this.bookImageService = bookImageService;
         this.userRepository = userRepository;
         this.bookCreateMapper = bookCreateMapper;
         this.bookDetailsInfoMapper = bookDetailsInfoMapper;
+        this.bookMainInfoMapper = bookMainInfoMapper;
     }
 
     @Override
@@ -74,13 +79,26 @@ public class BookServiceImpl implements BookService {
                 .map(bookDetailsInfoMapper::toDto)
                 .orElseThrow();
         BookImage bookImage = bookImageService.getImageUrl(id);
-        String imageUrl = ServletUriComponentsBuilder
+        bookDetailsInfoDto.setImageData(bookImage.getData());
+        /*String imageUrl = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
                 .path("/files/")
                 .path(bookImage.getUrl())
                 .toUriString();
-        bookDetailsInfoDto.setImageUrl(imageUrl);
+        bookDetailsInfoDto.setImageUrl(imageUrl);*/
         return bookDetailsInfoDto;
+    }
+
+    @Override
+    public List<BookMainInfoDto> getAllBooksByUserId(Long userId) {
+        return bookRepository.findAllBooksByUserId(userId).stream()
+                .map(bookMainInfoMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<BookMainInfoDto> getLastAddedBooks(int countOfBook) {
+        return List.of(new BookMainInfoDto());
     }
 
     @Override
