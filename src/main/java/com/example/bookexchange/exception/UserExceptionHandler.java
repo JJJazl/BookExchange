@@ -12,8 +12,16 @@ public class UserExceptionHandler {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler({UserNotFoundException.class})
+    public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
     @ExceptionHandler({BookAlreadyExists.class})
     public ResponseEntity<Object> handleBookAlreadyExistsException(BookAlreadyExists e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler({BookNotFoundException.class})
+    public ResponseEntity<Object> handleBookNotFoundException(BookNotFoundException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

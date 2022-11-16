@@ -53,4 +53,12 @@ public class BookController {
     public ResponseEntity<List<BookMainInfoDto>> getBooksForMainPage(@RequestParam int countOfBook) {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.getLastAddedBooks(countOfBook));
     }
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> deleteUserById(@PathVariable long id) {
+        ResponseEntity<Object> response = bookService.deleteById(id)
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.notFound().build();
+        return response;
+    }
 }

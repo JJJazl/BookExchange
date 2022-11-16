@@ -1,6 +1,7 @@
 package com.example.bookexchange.service.impl;
 
 import com.example.bookexchange.exception.BookAlreadyExists;
+import com.example.bookexchange.exception.BookNotFoundException;
 import com.example.bookexchange.mapper.BookCreateMapper;
 import com.example.bookexchange.mapper.BookDetailsInfoMapper;
 import com.example.bookexchange.mapper.BookMainInfoMapper;
@@ -77,7 +78,7 @@ public class BookServiceImpl implements BookService {
     public BookDetailsInfoDto getBookById(Long id) {
         BookDetailsInfoDto bookDetailsInfoDto = Optional.of(bookRepository.getBookById(id))
                 .map(bookDetailsInfoMapper::toDto)
-                .orElseThrow();
+                .orElseThrow(() -> new BookNotFoundException("Book does not exist with id = " + id));
         BookImage bookImage = bookImageService.getImageUrl(id);
         bookDetailsInfoDto.setImageData(bookImage.getData());
         /*String imageUrl = ServletUriComponentsBuilder
@@ -91,6 +92,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<BookMainInfoDto> getAllBooksByUserId(Long userId) {
+        //добавить проверку на юзера
         return bookRepository.findAllBooksByUserId(userId).stream()
                 .map(bookMainInfoMapper::toDto)
                 .collect(Collectors.toList());
@@ -98,11 +100,18 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<BookMainInfoDto> getLastAddedBooks(int countOfBook) {
-        return List.of(new BookMainInfoDto());
+        return bookRepository.getLastAddedBooks(countOfBook).stream()
+                .map(bookMainInfoMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public boolean deleteById(long id) {
-        return false;
+        //удалить book_image запись!!!
+        return bookRepository.findById(id)
+                .map(book -> {
+                    bookRepository.delete(book);
+                    return true;
+                }).orElse(false);
     }
 }

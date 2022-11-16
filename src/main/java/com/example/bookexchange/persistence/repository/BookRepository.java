@@ -16,7 +16,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query("select b from Book b join b.user u where b.id =:id")
     Book getBookById(Long id);
 
-    /*@Query(nativeQuery = true, value = "select * from Book b join BookImage bi on b.id = bi.book_id" +
-            " order by b.id desc limit ")
-    List<Book> getTot();*/
+    @Query(nativeQuery = true, value = "select * from book b join book_image bi on b.id = bi.book_id" +
+            " order by b.id desc limit 5")
+    List<Book> getLastAddedBooks(int count);
 }
