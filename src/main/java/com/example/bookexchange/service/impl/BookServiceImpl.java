@@ -76,7 +76,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDetailsInfoDto getBookById(Long id) {
-        BookDetailsInfoDto bookDetailsInfoDto = Optional.of(bookRepository.getBookById(id))
+        BookDetailsInfoDto bookDetailsInfoDto = Optional.ofNullable(bookRepository.getBookById(id))
                 .map(bookDetailsInfoMapper::toDto)
                 .orElseThrow(() -> new BookNotFoundException("Book does not exist with id = " + id));
         BookImage bookImage = bookImageService.getImageUrl(id);
