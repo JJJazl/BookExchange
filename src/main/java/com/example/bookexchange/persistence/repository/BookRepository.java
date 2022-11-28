@@ -9,12 +9,13 @@ import java.util.List;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
-    @Query("select b from Book b join b.bookImage bi where b.user.id =:id")
-    List<Book> findAllBooksByUserId(Long id);
+    List<Book> findBooksByUserId(Long userId);
 
     //просмотреть запрос
-    @Query("select b from Book b join b.user u where b.id =:id")
-    Book getBookById(Long id);
+    /*@Query("select b from Book b join b.user u where b.id =:id")
+    Book getBookById(Long id);*/
+
+    Book findBookByUserId(Long userId);
 
     @Query(nativeQuery = true, value = "select * from book b join book_image bi on b.id = bi.book_id" +
             " order by b.id desc limit 5")

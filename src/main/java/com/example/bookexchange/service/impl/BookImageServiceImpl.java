@@ -11,6 +11,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 public class BookImageServiceImpl implements BookImageService {
@@ -34,7 +35,12 @@ public class BookImageServiceImpl implements BookImageService {
     }
 
     @Override
-    public BookImage getImageUrl(Long id) {
-        return bookImageRepository.findById(id).orElseThrow();
+    public Optional<BookImage> getImageByBookId(Long bookId) {
+        return Optional.ofNullable(bookImageRepository.findBookImageByBookId(bookId));
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        bookImageRepository.deleteById(id);
     }
 }

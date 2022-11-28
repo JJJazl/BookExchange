@@ -33,12 +33,6 @@ public class Book extends BaseEntity<Long> {
     @OneToOne(mappedBy = "book")
     private BookImage bookImage;
 
-    /*@ManyToMany(mappedBy = "senderBookId", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
-    private List<Request> receivedRequests;
-
-    @ManyToMany(mappedBy = "recipientBookId", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
-    private List<Request> sentRequests;*/
-
     @OneToMany(mappedBy = "senderBookId", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private List<Request> sentRequests;
 

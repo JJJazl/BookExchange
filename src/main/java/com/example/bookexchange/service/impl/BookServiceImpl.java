@@ -51,7 +51,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void save(BookCreateDto bookDto, Long userId, MultipartFile image) {
-        List<Book> userBooks = bookRepository.findAllBooksByUserId(userId);
+        List<Book> userBooks = bookRepository.findBooksByUserId(userId);
 
         Optional<Book> existingBook = userBooks.stream()
                 .filter(book -> isBookExist(bookDto).test(book))
@@ -76,24 +76,19 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDetailsInfoDto getBookById(Long id) {
-        BookDetailsInfoDto bookDetailsInfoDto = Optional.ofNullable(bookRepository.getBookById(id))
+        BookDetailsInfoDto bookDetailsInfoDto = Optional.ofNullable(bookRepository.findBookByUserId(id))
                 .map(bookDetailsInfoMapper::toDto)
                 .orElseThrow(() -> new BookNotFoundException("Book does not exist with id = " + id));
-        BookImage bookImage = bookImageService.getImageUrl(id);
-        bookDetailsInfoDto.setImageData(bookImage.getData());
-        /*String imageUrl = ServletUriComponentsBuilder
-                .fromCurrentContextPath()
-                .path("/files/")
-                .path(bookImage.getUrl())
-                .toUriString();
-        bookDetailsInfoDto.setImageUrl(imageUrl);*/
+        Optional<BookImage> bookImage = bookImageService.getImageByBookId(id);
+        if (bookImage.isPresent()) {
+            bookDetailsInfoDto.setImageData(bookImage.orElseThrow().getData());
+        }
         return bookDetailsInfoDto;
     }
 
     @Override
     public List<BookMainInfoDto> getAllBooksByUserId(Long userId) {
-        //добавить проверку на юзера
-        return bookRepository.findAllBooksByUserId(userId).stream()
+        return bookRepository.findBooksByUserId(userId).stream()
                 .map(bookMainInfoMapper::toDto)
                 .collect(Collectors.toList());
     }
@@ -107,7 +102,10 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public boolean deleteById(long id) {
-        //удалить book_image запись!!!
+        Optional<BookImage> bookImage = bookImageService.getImageByBookId(id);
+        if (bookImage.isPresent()) {
+            bookImageService.deleteById(bookImage.orElseThrow().getId());
+        }
         return bookRepository.findById(id)
                 .map(book -> {
                     bookRepository.delete(book);

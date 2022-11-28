@@ -20,7 +20,7 @@ public class BookImage extends BaseEntity<Long> {
     @Type(type = "org.hibernate.type.ImageType")
     private byte[] data;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
     private Book book;
 }

@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestInfoDto {
-    private Long id;
-    private String recipientBookTitle;
-    private String senderBookTitle;
-    private String username;
-    private String status;
+public class RequestProcessDto {
+    Long id;
+    Long userFromId;
+    Long userToId;
+    Long recipientBookId;
+    Long senderBookId;
 }
